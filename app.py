@@ -8,6 +8,28 @@ from dotenv import load_dotenv
 # Load environment variables
 load_dotenv()
 
+# Configure API key with better error handling
+api_key = os.getenv('GOOGLE_API_KEY')
+if not api_key:
+    st.error("""
+    ⚠️ Google API Key not found! Please check:
+    1. Your .env file exists in the same directory as app.py
+    2. The .env file contains: GOOGLE_API_KEY=your_api_key_here
+    3. You've removed any quotes around the API key
+    4. There are no extra spaces or newlines
+    
+    If deploying to Streamlit Cloud:
+    1. Go to your app settings
+    2. Add your API key under 'Secrets'
+    """)
+    st.stop()
+
+try:
+    genai.configure(api_key=api_key)
+except Exception as e:
+    st.error(f"Error configuring API key: {str(e)}")
+    st.stop()
+
 st.set_page_config(page_title="🩺 AI Medical Assistant🤖", page_icon=":robot:", layout="wide")
 
 # Custom CSS 
@@ -47,14 +69,6 @@ st.markdown("""
         }
     </style>
 """, unsafe_allow_html=True)
-
-# Configure API key
-api_key = os.getenv('GOOGLE_API_KEY')
-if not api_key:
-    st.error("Please set your GOOGLE_API_KEY in the environment variables or .env file.")
-    st.stop()
-
-genai.configure(api_key=api_key)
 
 generation_config = {
   "temperature": 1,
