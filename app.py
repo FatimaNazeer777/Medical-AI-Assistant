@@ -2,7 +2,11 @@ import streamlit as st
 from pathlib import Path
 import google.generativeai as genai
 from google.generativeai import types
-from api_key import api_key
+import os
+from dotenv import load_dotenv
+
+# Load environment variables
+load_dotenv()
 
 st.set_page_config(page_title="🩺 AI Medical Assistant🤖", page_icon=":robot:", layout="wide")
 
@@ -44,8 +48,13 @@ st.markdown("""
     </style>
 """, unsafe_allow_html=True)
 
-#configure api key
-genai.configure(api_key = api_key)
+# Configure API key
+api_key = os.getenv('GOOGLE_API_KEY')
+if not api_key:
+    st.error("Please set your GOOGLE_API_KEY in the environment variables or .env file.")
+    st.stop()
+
+genai.configure(api_key=api_key)
 
 generation_config = {
   "temperature": 1,
