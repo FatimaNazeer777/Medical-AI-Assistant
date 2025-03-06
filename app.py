@@ -5,11 +5,21 @@ from google.generativeai import types
 import os
 from dotenv import load_dotenv
 
+# Debug information
+st.write("Current working directory:", os.getcwd())
+st.write(".env file exists:", os.path.exists('.env'))
+
 # Load environment variables
 load_dotenv()
 
+# Debug: Show all environment variables (excluding the actual API key value)
+env_vars = {k: '***' if 'API_KEY' in k else v for k, v in os.environ.items()}
+st.write("Environment variables:", env_vars)
+
 # Configure API key with better error handling
 api_key = os.getenv('GOOGLE_API_KEY')
+st.write("API key found:", "Yes" if api_key else "No")
+
 if not api_key:
     st.error("""
     ⚠️ Google API Key not found! Please check:
@@ -22,6 +32,16 @@ if not api_key:
     1. Go to your app settings
     2. Add your API key under 'Secrets'
     """)
+    
+    # Show .env file contents (excluding the actual key)
+    try:
+        with open('.env', 'r') as f:
+            env_contents = f.read()
+            st.write("Contents of .env file (partially hidden):", 
+                    env_contents.replace(api_key if api_key else '', '***'))
+    except Exception as e:
+        st.write("Error reading .env file:", str(e))
+    
     st.stop()
 
 try:
