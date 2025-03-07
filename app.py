@@ -1,58 +1,12 @@
 import streamlit as st
+st.set_page_config(page_title="🩺 AI Medical Assistant🤖", page_icon=":robot:", layout="wide")
+
 from pathlib import Path
 import google.generativeai as genai
 from google.generativeai import types
-import os
-from dotenv import load_dotenv
+from api_key import api_key
 
-# Debug information
-st.write("Current working directory:", os.getcwd())
-st.write(".env file exists:", os.path.exists('.env'))
-
-# Load environment variables
-load_dotenv()
-
-# Debug: Show all environment variables (excluding the actual API key value)
-env_vars = {k: '***' if 'API_KEY' in k else v for k, v in os.environ.items()}
-st.write("Environment variables:", env_vars)
-
-# Configure API key with better error handling
-api_key = os.getenv('GOOGLE_API_KEY')
-st.write("API key found:", "Yes" if api_key else "No")
-
-if not api_key:
-    st.error("""
-    ⚠️ Google API Key not found! Please check:
-    1. Your .env file exists in the same directory as app.py
-    2. The .env file contains: GOOGLE_API_KEY=your_api_key_here
-    3. You've removed any quotes around the API key
-    4. There are no extra spaces or newlines
-    
-    If deploying to Streamlit Cloud:
-    1. Go to your app settings
-    2. Add your API key under 'Secrets'
-    """)
-    
-    # Show .env file contents (excluding the actual key)
-    try:
-        with open('.env', 'r') as f:
-            env_contents = f.read()
-            st.write("Contents of .env file (partially hidden):", 
-                    env_contents.replace(api_key if api_key else '', '***'))
-    except Exception as e:
-        st.write("Error reading .env file:", str(e))
-    
-    st.stop()
-
-try:
-    genai.configure(api_key=api_key)
-except Exception as e:
-    st.error(f"Error configuring API key: {str(e)}")
-    st.stop()
-
-st.set_page_config(page_title="🩺 AI Medical Assistant🤖", page_icon=":robot:", layout="wide")
-
-# Custom CSS 
+# Custom CSS for professional medical styling
 st.markdown("""
     <style>
         .main {
@@ -89,6 +43,9 @@ st.markdown("""
         }
     </style>
 """, unsafe_allow_html=True)
+
+#configure api key
+genai.configure(api_key = api_key)
 
 generation_config = {
   "temperature": 1,
