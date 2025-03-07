@@ -1,5 +1,7 @@
 # Environment variables
 .env
+.secretstomltoml
+
 
 # Python
 __pycache__/
