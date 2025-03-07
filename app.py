@@ -4,7 +4,7 @@ st.set_page_config(page_title="🩺 AI Medical Assistant🤖", page_icon=":robot
 from pathlib import Path
 import google.generativeai as genai
 from google.generativeai import types
-api_key = st.secrets["GEMINI"]["API_KEY"]
+api_key = st.secrets["GOOGLE"]["API_KEY"]
 
 # Custom CSS for professional medical styling
 st.markdown("""
